@@ -6,7 +6,9 @@ Biomedical texts are an important source of drug-drug interactions (DDIs) inform
 Keywords: DDIs prediction, biomedical text mining, knowledge graph
 
 Run Code
+
 To train&test the SubGE-DDI model:
+
 python runDDIE.py --task_name MRPC --model_type bert --data_dir  G:/syy/code/share_code/data/data_train_test  --model_name_or_path  G:/syy/code/share_code/pubmedbert  --tokenizer_name  G:/syy/code/share_code/pubmedbert/vocab.txt  --output_dir  G:/syy/code/share_code/output --do_train  --num_train_epochs 5.  --dropout_prob .1  --weight_decay .01  --do_lower_case  --max_seq_length 390  --conv_window_size  5  --pos_emb_dim  10  --activation gelu  --per_gpu_train_batch_size  32 --work_dir G:/syy/code/share_code -d drugbank --hop 3 --graph_dim 75  --overwrite_output_dir  -k 5 --do_test --use_sub --use_cnn
 
 
