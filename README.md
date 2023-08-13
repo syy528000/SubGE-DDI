@@ -14,4 +14,5 @@ python runDDIE.py --task_name MRPC --model_type bert --data_dir  G:/syy/code/sha
 data_train_test.rar : train set and test set
 drugbank.rar : biomedical knowledge graph
 
+You can download the PubMedBERT in https://huggingface.co/microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext.
 
