@@ -11,6 +11,8 @@ To train&test the SubGE-DDI model:
 
 python runDDIE.py --task_name MRPC --model_type bert --data_dir  ./data_train_test  --model_name_or_path  ./pubmedbert  --tokenizer_name  ./pubmedbert/vocab.txt  --output_dir  ./output --do_train  --num_train_epochs 5.  --dropout_prob .1  --weight_decay .01  --do_lower_case  --max_seq_length 390  --conv_window_size  5  --pos_emb_dim  10  --activation gelu  --per_gpu_train_batch_size  32 --work_dir ./share_code -d drugbank --hop 3 --graph_dim 75  --overwrite_output_dir  -k 5 --do_test --use_sub --use_cnn
 
+our random seed in test: 42
+our random seed in 5-fold cross validation: 42, 43, 44, 45 and 46
 data_train_test.rar : train set and test set.
 drugbank.rar : biomedical knowledge graph.
 You can download the PubMedBERT in https://huggingface.co/microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext.
