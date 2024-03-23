@@ -91,7 +91,7 @@ class SubgraphDataset(Dataset):
         # self.tensors = kwargs.values()
         self.main_env = lmdb.open(db_path, readonly=True, max_dbs=3, lock=False) # 
         self.db_pos = self.main_env.open_db(db_name_pos.encode())
-        self.db_neg = self.main_env.open_db(db_name_neg.encode())
+ 
         self.node_features, self.kge_entity2id = get_kge_embeddings(dataset, kge_model) if use_kge_embeddings else (None, None)
         self.num_neg_samples_per_link = num_neg_samples_per_link
         triple_file = os.path.join(args.work_dir,'data/{}/relations_{}hop.txt'.format(dataset,args.hop))
