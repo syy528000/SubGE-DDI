@@ -23,13 +23,6 @@ def sample_neg(adj_list, edges, num_neg_samples_per_link=1, max_size=1000000, co
     pos_edges = edges
     neg_edges = []
 
-    # if max_size is set, randomly sample train links
-    if max_size < len(pos_edges):
-        perm = np.random.permutation(len(pos_edges))[:max_size] 
-        pos_edges = pos_edges[perm] 
-
-    # sample negative links for train/test
-
     n, r = adj_list[0].shape[0], len(adj_list)
 
     # distribution of edges across relations
