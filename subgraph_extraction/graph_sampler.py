@@ -85,7 +85,6 @@ def links2subgraphs(A, graphs, params, max_label_value=None):
     env = lmdb.open(params.db_path, map_size=map_size, max_dbs=6) 
 
     def extraction_helper(A, links, g_labels, split_env):
-        """links:split['pos'] ; g_labels:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,....]"""
 
         with env.begin(write=True, db=split_env) as txn: 
             txn.put('num_graphs'.encode(), (len(links)).to_bytes(int.bit_length(len(links)), byteorder='little')) 
@@ -112,16 +111,6 @@ def links2subgraphs(A, graphs, params, max_label_value=None):
         split_env = env.open_db(db_name_pos.encode()) 
         extraction_helper(A, split['pos'], labels, split_env)
 
-        # not use
-        logging.info(f"Extracting enclosing subgraphs for negative links in {split_name} set")
-        if params.dataset == 'BioSNAP':
-            labels = np.array(split["polarity_mr"])
-        else:
-            labels = np.ones(len(split['pos']))
-        db_name_neg = split_name + '_neg'
-        split_env = env.open_db(db_name_neg.encode()) 
-        extraction_helper(A, split['neg'], labels, split_env)
-
     max_n_label['value'] = max_label_value if max_label_value is not None else max_n_label['value']
 
     with env.begin(write=True) as txn:
@@ -147,7 +136,6 @@ def links2subgraphs(A, graphs, params, max_label_value=None):
 
 
 def get_average_subgraph_size(sample_size, links, A, params):
-    # sample_size为100
     total_size = 0
     #print(links, len(links))
     lst = np.random.choice(len(links), sample_size)
@@ -165,7 +153,6 @@ def intialize_worker(A, params, max_label_value):
 
 
 def extract_save_subgraph(args_):
-    """args_: [0,1,2,3,4,...], split['pos'], [1,1,1,1,1,1,1,...]"""
     idx, (n1, n2, r_label), g_label = args_
     # 0,(d1,d2,r),1
     
@@ -193,11 +180,6 @@ def get_neighbor_nodes(roots, adj, h=1, max_nodes_per_hop=None):
 
 
 def subgraph_extraction_labeling(ind, rel, A_list, h=1, enclosing_sub_graph=False, max_nodes_per_hop=None, max_node_label_value=None):
-    """
-    ind : (n1,n2)
-    rel : r_label
-    """
-    
     A_incidence = incidence_matrix(A_list) 
     A_incidence += A_incidence.T
     ind = list(ind)
@@ -209,7 +191,6 @@ def subgraph_extraction_labeling(ind, rel, A_list, h=1, enclosing_sub_graph=Fals
     subgraph_nei_nodes_int = root1_nei.intersection(root2_nei) 
     subgraph_nei_nodes_un = root1_nei.union(root2_nei) 
 
-    # Extract subgraph | Roots being in the front is essential for labelling and the model to work properly.
     if enclosing_sub_graph:
         if ind[0] in subgraph_nei_nodes_int:
             subgraph_nei_nodes_int.remove(ind[0])
@@ -248,7 +229,3 @@ def node_label(subgraph, max_distance=1):
     dist_to_roots = np.array(list(zip(dist_to_roots[0][0], dist_to_roots[1][0])), dtype=int)
 
     target_node_labels = np.array([[0, 1], [1, 0]])
-    labels = np.concatenate((target_node_labels, dist_to_roots)) if dist_to_roots.size else target_node_labels
-
-    enclosing_subgraph_nodes = np.where(np.max(labels, axis=1) <= max_distance)[0]
-    return labels, enclosing_subgraph_nodes
