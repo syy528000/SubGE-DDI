@@ -72,10 +72,14 @@ def set_seed(args):
     torch.manual_seed(args.seed) 
     torch.cuda.manual_seed(args.seed)
     os.environ['PYTHONHASHSEED'] = str(args.seed)
-    if args.n_gpu > 0:
+    try:
         torch.cuda.manual_seed_all(args.seed) 
+    except:
+        pass
     torch.backends.cudnn.deterministic = True 
     torch.backends.cudnn.benchmark = False  
+    os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
+    torch.use_deterministic_algorithms(True)  
     # torch.set_grad_enabled(False)
 
 def train(args, train_dataloader, dev_dataloader, graph_dataset, model, tokenizer, kfold):
