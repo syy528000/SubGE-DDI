@@ -222,3 +222,7 @@ def node_label(subgraph, max_distance=1):
     dist_to_roots = np.array(list(zip(dist_to_roots[0][0], dist_to_roots[1][0])), dtype=int)
 
     target_node_labels = np.array([[0, 1], [1, 0]])
+    labels = np.concatenate((target_node_labels, dist_to_roots)) if dist_to_roots.size else target_node_labels
+
+    enclosing_subgraph_nodes = np.where(np.max(labels, axis=1) <= max_distance)[0]
+    return labels, enclosing_subgraph_nodes
